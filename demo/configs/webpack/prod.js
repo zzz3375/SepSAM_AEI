@@ -1,16 +1,9 @@
-// Copyright (c) Meta Platforms, Inc. and affiliates.
-// All rights reserved.
+import { merge } from "webpack-merge";
+import { resolve } from "path";
+import Dotenv from "dotenv-webpack";
+import commonConfig from "./common";
 
-// This source code is licensed under the license found in the
-// LICENSE file in the root directory of this source tree.
-
-// production config
-const { merge } = require("webpack-merge");
-const { resolve } = require("path");
-const Dotenv = require("dotenv-webpack");
-const commonConfig = require("./common");
-
-module.exports = merge(commonConfig, {
+const prodConfig = merge(commonConfig, {
   mode: "production",
   output: {
     filename: "js/bundle.[contenthash].min.js",
@@ -20,3 +13,5 @@ module.exports = merge(commonConfig, {
   devtool: "source-map",
   plugins: [new Dotenv()],
 });
+
+export default prodConfig;
