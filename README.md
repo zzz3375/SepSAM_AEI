@@ -155,13 +155,17 @@ mask = mask_utils.decode(annotation["segmentation"])
 
 See [here](https://github.com/cocodataset/cocoapi/blob/master/PythonAPI/pycocotools/mask.py) for more instructions to manipulate masks stored in RLE format.
 
+## Note on Reproducibility with GPU
+
+The fine-tuning training process is not reproducible when using GPU. Using `torch.use_deterministic_algorithms(True)` with GPU does not work due to non-deterministic routines in PyTorch/CUDA. The `ResizeLongestSide` class in `segment_anything/utils/transforms.py` is suspected to be the cause of non-reproducibility. The current setup with `torch.use_deterministic_algorithms(False)` does not ensure reproducibility in fine-tuning training with GPU. As a potential workaround, you can use CPU for reproducibility, although it may be significantly slower.
+
 ## License
 
 The model is licensed under the [Apache 2.0 license](LICENSE).
 
 ## Contributing
 
-See [contributing](CONTRIBUTING.md) and the [code of conduct](CODE_OF_CONDUCT.md).
+See [contributing](CONTRIBUTING.md) and the [code of conduct](CODE_OF-CONDUCT.md).
 
 ## Contributors
 

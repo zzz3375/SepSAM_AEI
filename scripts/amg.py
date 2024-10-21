@@ -218,6 +218,9 @@ def main(args: argparse.Namespace) -> None:
             continue
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
+        # Use apply_image_deterministic for deterministic resizing
+        image = generator.predictor.transform.apply_image_deterministic(image)
+
         masks = generator.generate(image)
 
         base = os.path.basename(t)

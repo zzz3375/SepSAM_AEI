@@ -30,6 +30,17 @@ class ResizeLongestSide:
         target_size = self.get_preprocess_shape(image.shape[0], image.shape[1], self.target_length)
         return np.array(resize(to_pil_image(image), target_size))
 
+    def apply_image_deterministic(self, image: np.ndarray) -> np.ndarray:
+        """
+        Expects a numpy array with shape HxWxC in uint8 format.
+        Uses torch.nn.functional.interpolate with mode='nearest' for deterministic resizing.
+        """
+        target_size = self.get_preprocess_shape(image.shape[0], image.shape[1], self.target_length)
+        image_torch = torch.from_numpy(image).permute(2, 0, 1).unsqueeze(0).float()
+        resized_image_torch = F.interpolate(image_torch, size=target_size, mode='nearest')
+        resized_image = resized_image_torch.squeeze(0).permute(1, 2, 0).byte().numpy()
+        return resized_image
+
     def apply_coords(self, coords: np.ndarray, original_size: Tuple[int, ...]) -> np.ndarray:
         """
         Expects a numpy array of length 2 in the final dimension. Requires the
