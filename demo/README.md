@@ -40,7 +40,7 @@ Set the new image and export the embedding:
 
 ```
 image = cv2.imread('src/assets/dogs.jpg')
-predictor.set_image(image)
+predictor.set_image(image, "BGR")
 image_embedding = predictor.get_image_embedding().cpu().numpy()
 np.save("dogs_embedding.npy", image_embedding)
 ```
