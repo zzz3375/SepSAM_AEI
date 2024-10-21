@@ -1,16 +1,10 @@
-// Copyright (c) Meta Platforms, Inc. and affiliates.
-// All rights reserved.
+import { resolve } from "path";
+import HtmlWebpackPlugin from "html-webpack-plugin";
+import FriendlyErrorsWebpackPlugin from "friendly-errors-webpack-plugin";
+import CopyPlugin from "copy-webpack-plugin";
+import webpack from "webpack";
 
-// This source code is licensed under the license found in the
-// LICENSE file in the root directory of this source tree.
-
-const { resolve } = require("path");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const FriendlyErrorsWebpackPlugin = require("friendly-errors-webpack-plugin");
-const CopyPlugin = require("copy-webpack-plugin");
-const webpack = require("webpack");
-
-module.exports = {
+const config = {
   entry: "./src/index.tsx",
   resolve: {
     extensions: [".js", ".jsx", ".ts", ".tsx"],
@@ -82,3 +76,5 @@ module.exports = {
     }),
   ],
 };
+
+export default config;

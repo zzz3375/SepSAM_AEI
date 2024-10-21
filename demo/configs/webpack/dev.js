@@ -1,14 +1,7 @@
-// Copyright (c) Meta Platforms, Inc. and affiliates.
-// All rights reserved.
+import { merge } from "webpack-merge";
+import commonConfig from "./common";
 
-// This source code is licensed under the license found in the
-// LICENSE file in the root directory of this source tree.
-
-// development config
-const { merge } = require("webpack-merge");
-const commonConfig = require("./common");
-
-module.exports = merge(commonConfig, {
+const devConfig = merge(commonConfig, {
   mode: "development",
   devServer: {
     hot: true, // enable HMR on the server
@@ -23,3 +16,5 @@ module.exports = merge(commonConfig, {
   },
   devtool: "cheap-module-source-map",
 });
+
+export default devConfig;
