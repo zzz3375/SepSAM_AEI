@@ -1,9 +1,3 @@
-// Copyright (c) Meta Platforms, Inc. and affiliates.
-// All rights reserved.
-
-// This source code is licensed under the license found in the
-// LICENSE file in the root directory of this source tree.
-
 import { InferenceSession, Tensor } from "onnxruntime-web";
 import React, { useContext, useEffect, useState } from "react";
 import "./assets/scss/App.scss";
@@ -13,6 +7,7 @@ import { onnxMaskToImage } from "./components/helpers/maskUtils";
 import { modelData } from "./components/helpers/onnxModelAPI";
 import Stage from "./components/Stage";
 import AppContext from "./components/hooks/createContext";
+import { segment_video } from "segment_anything/predictor";
 const ort = require("onnxruntime-web");
 /* @ts-ignore */
 import npyjs from "npyjs";
@@ -30,6 +25,7 @@ const App = () => {
   } = useContext(AppContext)!;
   const [model, setModel] = useState<InferenceSession | null>(null); // ONNX model
   const [tensor, setTensor] = useState<Tensor | null>(null); // Image embedding tensor
+  const [isVideo, setIsVideo] = useState<boolean>(false); // State variable to handle video input
 
   // The ONNX model expects the input to be rescaled to 1024. 
   // The modelScale state variable keeps track of the scale values.
@@ -122,6 +118,16 @@ const App = () => {
     } catch (e) {
       console.log(e);
     }
+  };
+
+  const handleVideoUpload = async (videoFile: File) => {
+    setIsVideo(true);
+    const videoURL = URL.createObjectURL(videoFile);
+    const videoElement = document.createElement("video");
+    videoElement.src = videoURL;
+    videoElement.onloadeddata = () => {
+      segment_video(videoElement, model);
+    };
   };
 
   return <Stage />;
