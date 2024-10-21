@@ -212,11 +212,14 @@ def main(args: argparse.Namespace) -> None:
 
     for t in targets:
         print(f"Processing '{t}'...")
-        image = cv2.imread(t)
+        image = cv2.imread(t, cv2.IMREAD_UNCHANGED)
         if image is None:
             print(f"Could not load '{t}' as an image, skipping...")
             continue
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        if t.lower().endswith('.webp'):
+            image = cv2.cvtColor(image, cv2.COLOR_BGRA2RGBA)
+        else:
+            image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
         masks = generator.generate(image)
 

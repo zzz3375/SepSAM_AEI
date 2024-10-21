@@ -5,6 +5,7 @@
 # LICENSE file in the root directory of this source tree.
 
 import torch
+import cv2  # type: ignore
 
 from segment_anything import sam_model_registry
 from segment_anything.utils.onnx import SamOnnxModel
@@ -173,6 +174,13 @@ def to_numpy(tensor):
 
 if __name__ == "__main__":
     args = parser.parse_args()
+    image = cv2.imread(args.input, cv2.IMREAD_UNCHANGED)
+    if image is None:
+        print(f"Could not load '{args.input}' as an image, skipping...")
+    if args.input.lower().endswith('.webp'):
+        image = cv2.cvtColor(image, cv2.COLOR_BGRA2RGBA)
+    else:
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     run_export(
         model_type=args.model_type,
         checkpoint=args.checkpoint,
