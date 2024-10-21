@@ -84,6 +84,26 @@ See the examples notebooks on [using SAM with prompts](/notebooks/predictor_exam
   <img src="assets/notebook2.png?raw=true" width="48.9%" />
 </p>
 
+## Video Segmentation
+
+To use the new video segmentation feature, follow these steps:
+
+1. Import the necessary modules and initialize the SAM model and predictor:
+
+```
+from segment_anything import SamPredictor, sam_model_registry, segment_video
+sam = sam_model_registry["<model_type>"](checkpoint="<path/to/checkpoint>")
+predictor = SamPredictor(sam)
+```
+
+2. Call the `segment_video` function with the path to your video file and the predictor:
+
+```
+segment_video("<path/to/video>", predictor)
+```
+
+This will read the video frames, segment objects using SAM, and display the segmented frames.
+
 ## ONNX Export
 
 SAM's lightweight mask decoder can be exported to ONNX format so that it can be run in any environment that supports ONNX runtime, such as in-browser as showcased in the [demo](https://segment-anything.com/demo). Export the model with

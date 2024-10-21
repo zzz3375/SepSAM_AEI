@@ -6,6 +6,7 @@
 
 import numpy as np
 import torch
+import cv2
 
 from segment_anything.modeling import Sam
 
@@ -267,3 +268,34 @@ class SamPredictor:
         self.orig_w = None
         self.input_h = None
         self.input_w = None
+
+
+def segment_video(video_path: str, sam_predictor: SamPredictor) -> None:
+    cap = cv2.VideoCapture(video_path)
+    if not cap.isOpened():
+        print(f"Error: Could not open video {video_path}")
+        return
+
+    while cap.isOpened():
+        ret, frame = cap.read()
+        if not ret:
+            break
+
+        frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        sam_predictor.set_image(frame_rgb)
+
+        # Example of using the predictor with some dummy points
+        point_coords = np.array([[100, 100], [200, 200]])
+        point_labels = np.array([1, 0])
+        masks, _, _ = sam_predictor.predict(point_coords=point_coords, point_labels=point_labels)
+
+        # Process masks as needed, e.g., overlay on the frame
+        for mask in masks:
+            frame[mask > 0] = [0, 255, 0]  # Example: color mask area green
+
+        cv2.imshow('Segmented Video', frame)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+    cap.release()
+    cv2.destroyAllWindows()
