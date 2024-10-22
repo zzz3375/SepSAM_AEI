@@ -77,6 +77,23 @@ Additionally, masks can be generated for images from the command line:
 python scripts/amg.py --checkpoint <path/to/checkpoint> --model-type <model_type> --input <image_or_folder> --output <path/to/output>
 ```
 
+To control the granularity of segmented objects, you can use the `granularity` parameter when initializing the `SamAutomaticMaskGenerator` class or pass the `--granularity` argument when using the `amg.py` script.
+
+Example usage:
+
+```python
+from segment_anything import SamAutomaticMaskGenerator, sam_model_registry
+sam = sam_model_registry["<model_type>"](checkpoint="<path/to/checkpoint>")
+mask_generator = SamAutomaticMaskGenerator(sam, granularity=0.7)
+masks = mask_generator.generate(<your_image>)
+```
+
+Alternatively, you can pass the `--granularity` argument when using the `amg.py` script:
+
+```
+python scripts/amg.py --checkpoint <path/to/checkpoint> --model-type <model_type> --input <image_or_folder> --output <path/to/output> --granularity 0.7
+```
+
 See the examples notebooks on [using SAM with prompts](/notebooks/predictor_example.ipynb) and [automatically generating masks](/notebooks/automatic_mask_generator_example.ipynb) for more details.
 
 <p float="left">
@@ -180,4 +197,25 @@ If you use SAM or SA-1B in your research, please use the following BibTeX entry.
   journal={arXiv:2304.02643},
   year={2023}
 }
+```
+
+## Granularity Parameter
+
+The `SamAutomaticMaskGenerator` class now includes a `granularity` parameter that allows you to control the granularity of segmented objects. This parameter can be set when initializing the `SamAutomaticMaskGenerator` class or passed as a command-line argument when using the `amg.py` script.
+
+### Example Usage
+
+To use the `granularity` parameter, you can initialize the `SamAutomaticMaskGenerator` class with the desired granularity value:
+
+```python
+from segment_anything import SamAutomaticMaskGenerator, sam_model_registry
+sam = sam_model_registry["<model_type>"](checkpoint="<path/to/checkpoint>")
+mask_generator = SamAutomaticMaskGenerator(sam, granularity=0.7)
+masks = mask_generator.generate(<your_image>)
+```
+
+Alternatively, you can pass the `--granularity` argument when using the `amg.py` script:
+
+```
+python scripts/amg.py --checkpoint <path/to/checkpoint> --model-type <model_type> --input <image_or_folder> --output <path/to/output> --granularity 0.7
 ```
