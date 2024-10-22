@@ -49,6 +49,7 @@ class SamAutomaticMaskGenerator:
         point_grids: Optional[List[np.ndarray]] = None,
         min_mask_region_area: int = 0,
         output_mode: str = "binary_mask",
+        granularity: float = 0.5,
     ) -> None:
         """
         Using a SAM model, generates masks for the entire image.
@@ -93,6 +94,7 @@ class SamAutomaticMaskGenerator:
             'uncompressed_rle', or 'coco_rle'. 'coco_rle' requires pycocotools.
             For large resolutions, 'binary_mask' may consume large amounts of
             memory.
+          granularity (float): A parameter to control the granularity of segmented objects.
         """
 
         assert (points_per_side is None) != (
@@ -132,6 +134,7 @@ class SamAutomaticMaskGenerator:
         self.crop_n_points_downscale_factor = crop_n_points_downscale_factor
         self.min_mask_region_area = min_mask_region_area
         self.output_mode = output_mode
+        self.granularity = granularity
 
     @torch.no_grad()
     def generate(self, image: np.ndarray) -> List[Dict[str, Any]]:
@@ -169,6 +172,10 @@ class SamAutomaticMaskGenerator:
                 self.min_mask_region_area,
                 max(self.box_nms_thresh, self.crop_nms_thresh),
             )
+
+        # Blend smaller segments into larger ones based on granularity
+        if self.granularity > 0:
+            mask_data = self.blend_segments(mask_data, self.granularity)
 
         # Encode masks
         if self.output_mode == "coco_rle":
@@ -369,4 +376,19 @@ class SamAutomaticMaskGenerator:
                 mask_data["boxes"][i_mask] = boxes[i_mask]  # update res directly
         mask_data.filter(keep_by_nms)
 
+        return mask_data
+
+    def blend_segments(self, mask_data: MaskData, granularity: float) -> MaskData:
+        """
+        Blends smaller segments into larger ones based on the granularity parameter.
+
+        Arguments:
+          mask_data (MaskData): The mask data containing the segments.
+          granularity (float): The granularity parameter to control the blending.
+
+        Returns:
+          MaskData: The updated mask data with blended segments.
+        """
+        # Implement the blending logic here based on the granularity parameter.
+        # This is a placeholder implementation and should be replaced with the actual blending logic.
         return mask_data

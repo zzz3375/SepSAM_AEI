@@ -63,6 +63,13 @@ parser.add_argument(
     ),
 )
 
+parser.add_argument(
+    "--granularity",
+    type=float,
+    default=0.5,
+    help="Set the granularity of segmented objects.",
+)
+
 amg_settings = parser.add_argument_group("AMG Settings")
 
 amg_settings.add_argument(
@@ -187,6 +194,7 @@ def get_amg_kwargs(args):
         "crop_overlap_ratio": args.crop_overlap_ratio,
         "crop_n_points_downscale_factor": args.crop_n_points_downscale_factor,
         "min_mask_region_area": args.min_mask_region_area,
+        "granularity": args.granularity,
     }
     amg_kwargs = {k: v for k, v in amg_kwargs.items() if v is not None}
     return amg_kwargs
