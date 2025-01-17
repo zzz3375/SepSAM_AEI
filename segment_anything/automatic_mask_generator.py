@@ -161,6 +161,8 @@ class SamAutomaticMaskGenerator:
 
         # Generate masks
         mask_data = self._generate_masks(image)
+        if mask_data is None:
+            return None
 
         # Filter small disconnected regions and holes in masks
         if self.min_mask_region_area > 0:
@@ -204,13 +206,13 @@ class SamAutomaticMaskGenerator:
         data = MaskData()
         for crop_box, layer_idx in zip(crop_boxes, layer_idxs):
             crop_data = self._process_crop(image, crop_box, layer_idx, orig_size)
+            
             data.cat(crop_data)
 
         if data["crop_boxes"] is None or data["crop_boxes"].numel() == 0:
-            print("No valid crop boxes found. Skipping processing.")
-            return MaskData()
-        else:
-            print(data["crop_boxes"].shape)
+            # No masks were found in all the little crops
+            return None
+        
 
         # Remove duplicate masks between crops
         if len(crop_boxes) > 1:
