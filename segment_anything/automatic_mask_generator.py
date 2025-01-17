@@ -206,6 +206,12 @@ class SamAutomaticMaskGenerator:
             crop_data = self._process_crop(image, crop_box, layer_idx, orig_size)
             data.cat(crop_data)
 
+        if data["crop_boxes"] is None or data["crop_boxes"].numel() == 0:
+            print("No valid crop boxes found. Skipping processing.")
+            return MaskData()
+        else:
+            print(data["crop_boxes"].shape)
+
         # Remove duplicate masks between crops
         if len(crop_boxes) > 1:
             # Prefer masks from smaller crops
