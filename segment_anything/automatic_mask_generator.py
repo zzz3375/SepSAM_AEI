@@ -31,6 +31,7 @@ from .utils.amg import (
     uncrop_points,
 )
 
+import cv2, time
 
 class SamAutomaticMaskGenerator:
     def __init__(
@@ -211,6 +212,8 @@ class SamAutomaticMaskGenerator:
 
         if data["crop_boxes"] is None or data["crop_boxes"].numel() == 0:
             # No masks were found in all the little crops
+            # saving problem image
+            cv2.imwrite(f"errorimg_{time.time()}.png",image)
             return None
         
 
