@@ -46,3 +46,9 @@ output/**
 
 output_log_*.txt
 *.zip
+
+.venv/
+
+# yolo
+mycelium_yolo_dataset/
+runs/
