@@ -34,8 +34,8 @@ from yolo_suggestion import sam_seg_crack_by_prompt
 results = sam_seg_crack_by_prompt(
     source="crack_image.jpg",
     debug=True,
-    sampling_points=12,  # Adjust based on crack complexity
-    yolo_thresh=0.6     # Confidence threshold
+    sampling_points=20,  # Adjust based on crack complexity
+    yolo_thresh=0.5     # Confidence threshold
 )
 ```
 
@@ -51,12 +51,13 @@ results = sam_seg_crack_by_prompt(
 ## Expected Outputs
 
 ```
-results/
+tmp/
 ├── yolo_raw_result.png
 ├── skeleton.png
 ├── SAM_prompting.png
 └── accepted_result.png
 ```
+
 
 
 
